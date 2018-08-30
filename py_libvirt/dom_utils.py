@@ -48,4 +48,7 @@ def configure_vm(conf_params=None):
     print(mac)
     print(img)
     print(iso)
-
+    
+    root[0].text = 'ArchLinux test'
+    root[13][1][1].attrib['file'] = 'test mod img'
+    print(root2xml(root))
