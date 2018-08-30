@@ -36,12 +36,13 @@ class Host(object):
         return self.conn.getInfo()
 
     def domains(self):
-        domain_ids = self.conn.listDomainsID()
+        domains = self.conn.listAllDomains()
+        domain_uuids = []
         domain_names = []
-        for id in domain_ids:
-            domain = self.conn.lookupByID(id)
-            domain_names.append(domain.name())
-        return dict(zip(domain_ids, domain_names))
+        for dom in domains:
+            domain_names.append(dom.name())
+            domain_uuids.append(dom.UUIDString())
+        return dict(zip(domain_names, domain_uuids ))
 
 if __name__ == '__main__':
     host = Host()
