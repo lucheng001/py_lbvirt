@@ -4,7 +4,7 @@
 import os
 import uuid
 import random
-import copy
+import subprocess
 import logging
 import xml.etree.ElementTree as ET
  
@@ -32,8 +32,14 @@ def random_mac():
 		random.randint(0x00, 0xff) ]
 	return ':'.join(map(lambda x: "%02x" % x, mac))
 
-def create_img(name=None, size=None, type='qcow2'):
-    pass
+def create_img(name=None, img_size=None, vm_type='qcow2'):
+    args = ['qemu-img', 'create', '-f', vm_type, name, img_size]
+    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    if not stderr:
+        logging.info('create vm img success for {}'.format(name))
+        return name
+    return -1
 
 
 class ConfigureVM(object):
