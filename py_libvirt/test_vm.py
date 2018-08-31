@@ -22,6 +22,7 @@ class TestDom(object):
         else:
             print('create vm succeed') 
             print('name: {}\nid: {}\nuuid: {}'.format(dom.name(), dom.ID(), dom.UUIDString()))
+            print(vm_instance.vm_vnc_info())
 
 if __name__ == '__main__':
     test_instance = TestDom()

@@ -91,3 +91,11 @@ class VMInstance(object):
             logging.error('create new vm failed!\n{}'.format(e))
             return -1
 
+    def vm_vnc_info(self):
+        args = ['virsh', 'vncdisplay', self.dom.UUIDString()]
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        if not stderr:
+            return stdout
+        return -1
+
