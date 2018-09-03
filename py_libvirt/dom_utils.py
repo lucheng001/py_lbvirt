@@ -103,7 +103,40 @@ class VMInstance(object):
             return rsp_data(-1, 'create new vm failed\n{}'.format(e), None)
 
     def remove_vm(self):
-        pass
+        try:
+            if self.dom.isActive:
+                self.dom.shutdown()
+            self.dom.undefine()
+            logging.info('delete vm succeed')
+            return rsp_data(0, 'delete vm succeed', None)
+        except Exception as e:
+            logging.info('delete vm failed cause:\n'.format(e))
+            return rsp_data(-1, 'delete vm failed\n{}'.format(e), None)
+
+    def start_vm(self):
+        if self.dom.create() == 0:
+            logging.info('start vm')
+            return rsp_data(0, 'vm is runnning now')
+        logging.info('start vm failed')
+        return rsp_data(-1, 'start dom failed')
+
+    def shutdown_vm(self):
+        if self.dom.shutdown() == 0:
+            logging.info('powered of vm')
+            return rsp_data(0, 'vm powered off', None)
+        logging.info('powered off vm failed')
+        return rsp_data(-1, 'vm powered off failed')
+
+    def set_vm_auto_start(self, auto_start=True):
+        if auto_start:
+            rsp = self.dom.setAutostart(1)
+        else:
+            rsp = self.dom.setAutostart(0)
+        if rsp == 0:
+            logging.info('set auto start {} for vm succeed!'.format(auto_start))
+            return rsp_data(0, 'set auto start {} for vm succeed!'.format(auto_start), None)
+        logging.info('set auto start {} for vm failed!'.format(auto_start))
+        return rsp_data(-1, 'set auto start {} for vm failed!'.format(auto_start), None)
 
     def vm_vnc_info(self):
         args = ['virsh', 'vncdisplay', self.dom.UUIDString()]
