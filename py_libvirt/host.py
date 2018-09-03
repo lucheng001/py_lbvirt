@@ -68,6 +68,13 @@ class Host(object):
                 return rsp_data(-1, 'get dom by name error:\n{}'.format(e), None)
         return rsp_data(-1, 'not qemu host connected!', None)
 
+
+class HostNetwork(Host):
+    def networks(self):
+        if self.conn:
+            return rsp_data(0, 'all networks', self.conn.listNetworks())
+        return rsp_data(-1, 'not connected to any qemu server', None)
+
 if __name__ == '__main__':
     host = Host()
     conn = host.connect()
