@@ -19,7 +19,7 @@ class TestDom(object):
         rsp = vm_instance.create_vm(conn=self.conn, vm_xml_file=vm_xml)
         dom = rsp['data']
         if rsp['rsp_code'] == -1:
-            print('create vm failed')
+            print(rsp)
         else:
             print('create vm succeed') 
             print('name: {}\nid: {}\nuuid: {}'.format(dom.name(), dom.ID(), dom.UUIDString()))

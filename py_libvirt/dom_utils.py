@@ -84,12 +84,20 @@ class VMInstance(object):
         try:
             vm_xml = open(vm_xml_file, 'r').read()
             os.remove(vm_xml_file)
-            dom = conn.createXML(vm_xml, 0)
+            try:
+                dom = conn.defineXML(vm_xml)
+            except Exception as e:
+                return rsp_data(-1, 'define domain failed\n{}'.format(e), None)
+            #dom = conn.createXML(vm_xml, 0)
+            logging.info('define domain succeed')
             if dom == None:
                 logging.error('failed to create new vm!\n{}'.format(vm_xml))
+                return rsp_data(-1, 'failed to define a domain from an xml definition', None)
+            if dom.create() < 0:
+                return rsp_data(0, 'create cm succeed but not boot guest domain', dom)
             logging.info('create new vm success!')
             self.dom = dom
-            return rsp_data(0, 'create new vm succeed', dom)
+            return rsp_data(0, 'create new vm succeed and booted', dom)
         except Exception as e:
             logging.error('create new vm failed!\n{}'.format(e))
             return rsp_data(-1, 'create new vm failed\n{}'.format(e), None)
